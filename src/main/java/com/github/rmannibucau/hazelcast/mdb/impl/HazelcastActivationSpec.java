@@ -1,7 +1,6 @@
 package com.github.rmannibucau.hazelcast.mdb.impl;
 
 import com.github.rmannibucau.hazelcast.mdb.api.HazelcastMessageListener;
-import com.hazelcast.core.MessageListener;
 
 import javax.resource.ResourceException;
 import javax.resource.spi.Activation;
@@ -9,16 +8,18 @@ import javax.resource.spi.ActivationSpec;
 import javax.resource.spi.InvalidPropertyException;
 import javax.resource.spi.ResourceAdapter;
 import java.io.Serializable;
+import java.util.EventListener;
 
 @Activation(messageListeners = HazelcastMessageListener.class)
 public class HazelcastActivationSpec implements ActivationSpec, Serializable {
-    private String instance;
     private String target;
-    private String targetType;
+    private String instance = "hazelcast";
+    private String targetType = "map";
+    private boolean includeValue = false; // is supported
 
     private ResourceAdapter ra;
     private HazelcastMessageListener endpoint;
-    private MessageListener<Object> listener;
+    private EventListener listener;
 
     @Override
     public void validate() throws InvalidPropertyException {
@@ -59,11 +60,19 @@ public class HazelcastActivationSpec implements ActivationSpec, Serializable {
         this.targetType = targetType;
     }
 
-    public void setListener(final MessageListener<Object> listener) {
+    public boolean getIncludeValue() {
+        return includeValue;
+    }
+
+    public void setIncludeValue(final boolean includeValue) {
+        this.includeValue = includeValue;
+    }
+
+    public void setListener(final EventListener listener) {
         this.listener = listener;
     }
 
-    public MessageListener<Object> getListener() {
+    public EventListener getListener() {
         return listener;
     }
 }
