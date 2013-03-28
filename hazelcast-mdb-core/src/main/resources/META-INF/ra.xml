@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<connector xmlns="http://java.sun.com/xml/ns/j2ee"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+                               http://java.sun.com/xml/ns/j2ee/connector_1_5.xsd"
+           version="1.5">
+
+  <description>Hazelcast MDB ResourceAdapter</description>
+  <display-name>Hazelcast MDB ResourceAdapter</display-name>
+
+  <vendor-name>rmannibucau</vendor-name>
+  <eis-type>Hazelcast Adapter</eis-type>
+  <resourceadapter-version>0.1</resourceadapter-version>
+
+  <resourceadapter id="HazelcastMDBResourceAdapter">
+    <resourceadapter-class>com.github.rmannibucau.hazelcast.mdb.impl.HazelcastResourceAdapter</resourceadapter-class>
+    <inbound-resourceadapter>
+      <messageadapter>
+        <messagelistener>
+          <messagelistener-type>com.github.rmannibucau.hazelcast.mdb.api.HazelcastMessageListener</messagelistener-type>
+          <activationspec>
+            <activationspec-class>com.github.rmannibucau.hazelcast.mdb.impl.HazelcastActivationSpec</activationspec-class>
+          </activationspec>
+        </messagelistener>
+      </messageadapter>
+    </inbound-resourceadapter>
+  </resourceadapter>
+</connector>
