@@ -4,6 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
+
   <name>Hazelcast MDB</name>
   <groupId>com.github.rmannibucau</groupId>
   <artifactId>hazelcast-mdb</artifactId>
@@ -14,7 +20,7 @@
     <dependency>
       <groupId>org.apache.openejb</groupId>
       <artifactId>javaee-api</artifactId>
-      <version>6.0-4</version>
+      <version>6.0-5</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -38,13 +44,13 @@
     <dependency>
       <groupId>org.apache.openejb</groupId>
       <artifactId>arquillian-openejb-embedded-4</artifactId>
-      <version>4.6.0-SNAPSHOT</version>
+      <version>4.5.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.openejb</groupId>
       <artifactId>ziplock</artifactId>
-      <version>1.6.0-SNAPSHOT</version>
+      <version>1.5.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -93,4 +99,11 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
+  <scm>
+    <connection>scm:git:https://github.com/rmannibucau/hazelcast-mdb.git</connection>
+    <developerConnection>scm:git:https://github.com/rmannibucau/hazelcast-mdb.git</developerConnection>
+    <url>https://github.com/rmannibucau/hazelcast-mdb</url>
+  </scm>
 </project>
+
