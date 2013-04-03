@@ -46,6 +46,7 @@ public class HazelcastResourceAdapter implements ResourceAdapter {
             throw new ResourceException("instance and target should be specified");
         }
 
+        // TODO: handle a pool of endpoints
 
         final HazelcastInstance instance = findHazelcastInstance(hspec.getInstance());
         final HazelcastMessageListener<Object> endpoint = HazelcastMessageListener.class.cast(endpointFactory.createEndpoint(null));
@@ -122,12 +123,12 @@ public class HazelcastResourceAdapter implements ResourceAdapter {
         }
 
         @Override
-        public void itemAdded(final ItemEvent<Object> item) {
+        public synchronized void itemAdded(final ItemEvent<Object> item) {
             endpoint.onMessage(item);
         }
 
         @Override
-        public void itemRemoved(final ItemEvent<Object> item) {
+        public synchronized void itemRemoved(final ItemEvent<Object> item) {
             endpoint.onMessage(item);
         }
     }
@@ -140,22 +141,22 @@ public class HazelcastResourceAdapter implements ResourceAdapter {
         }
 
         @Override
-        public void entryAdded(final EntryEvent<Object, Object> event) {
+        public synchronized void entryAdded(final EntryEvent<Object, Object> event) {
             endpoint.onMessage(event);
         }
 
         @Override
-        public void entryRemoved(final EntryEvent<Object, Object> event) {
+        public synchronized void entryRemoved(final EntryEvent<Object, Object> event) {
             endpoint.onMessage(event);
         }
 
         @Override
-        public void entryUpdated(final EntryEvent<Object, Object> event) {
+        public synchronized void entryUpdated(final EntryEvent<Object, Object> event) {
             endpoint.onMessage(event);
         }
 
         @Override
-        public void entryEvicted(final EntryEvent<Object, Object> event) {
+        public synchronized void entryEvicted(final EntryEvent<Object, Object> event) {
             endpoint.onMessage(event);
         }
     }
@@ -168,7 +169,7 @@ public class HazelcastResourceAdapter implements ResourceAdapter {
         }
 
         @Override
-        public void onMessage(final Message<Object> message) {
+        public synchronized void onMessage(final Message<Object> message) {
             endpoint.onMessage(message);
         }
     }
