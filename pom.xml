@@ -11,7 +11,7 @@
   <name>Hazelcast MDB</name>
   <groupId>com.github.rmannibucau</groupId>
   <artifactId>hazelcast-mdb</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.1</version>
   <packaging>rar</packaging>
 
   <dependencies>
