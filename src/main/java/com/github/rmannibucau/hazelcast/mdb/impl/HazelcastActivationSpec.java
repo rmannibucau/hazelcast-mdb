@@ -16,6 +16,7 @@ public class HazelcastActivationSpec implements ActivationSpec, Serializable {
     private String instance = "hazelcast";
     private String targetType = "map";
     private boolean includeValue = false; // is supported
+    private int poolSize = 10;
 
     private ResourceAdapter ra;
     private HazelcastMessageListener endpoint;
@@ -74,5 +75,13 @@ public class HazelcastActivationSpec implements ActivationSpec, Serializable {
 
     public EventListener getListener() {
         return listener;
+    }
+
+    public int getPoolSize() {
+        return poolSize;
+    }
+
+    public void setPoolSize(int poolSize) {
+        this.poolSize = poolSize;
     }
 }

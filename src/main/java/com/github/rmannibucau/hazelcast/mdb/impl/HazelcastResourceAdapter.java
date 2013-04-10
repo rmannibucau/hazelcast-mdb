@@ -19,7 +19,13 @@ import javax.resource.spi.ResourceAdapter;
 import javax.resource.spi.ResourceAdapterInternalException;
 import javax.resource.spi.endpoint.MessageEndpointFactory;
 import javax.transaction.xa.XAResource;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Collection;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Connector(vendorName = "rmannibucau", version = "0.1", eisType = "Hazelcast MDB Adapter")
@@ -46,10 +52,26 @@ public class HazelcastResourceAdapter implements ResourceAdapter {
             throw new ResourceException("instance and target should be specified");
         }
 
-        // TODO: handle a pool of endpoints
+        final int poolSize = hspec.getPoolSize();
+        final BlockingQueue<HazelcastMessageListener<Object>> pool = new ArrayBlockingQueue<HazelcastMessageListener<Object>>(poolSize);
+        for (int i = 0; i < poolSize; i++) {
+            pool.add(HazelcastMessageListener.class.cast(endpointFactory.createEndpoint(null)));
+        }
+        final HazelcastMessageListener<Object> endpoint = HazelcastMessageListener.class.cast(
+                Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
+                        new Class<?>[] { HazelcastMessageListener.class }, new InvocationHandler() {
+                    @Override
+                    public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+                        final HazelcastMessageListener<Object> listener = pool.take();
+                        try {
+                            return method.invoke(listener, args);
+                        } finally { // we currently don't handle listener invalidation, shouldn't hurt if the listener is not stateful
+                            pool.add(listener);
+                        }
+                    }
+                }));
 
         final HazelcastInstance instance = findHazelcastInstance(hspec.getInstance());
-        final HazelcastMessageListener<Object> endpoint = HazelcastMessageListener.class.cast(endpointFactory.createEndpoint(null));
         final String type = hspec.getTargetType();
         if ("topic".equals(type)) {
             final MessageListener<Object> listener = new DelegateMessageListener(endpoint);
